@@ -3,7 +3,7 @@ import { computed, onMounted, ref, watchEffect } from "vue";
 import axios from "axios";
 import { type Photo } from "../types/index";
 
-const props = defineProps<{ msg: string }>();
+// const props = defineProps<{ msg: string }>();
 
 const photos = ref<Photo[]>([]);
 const inputQuery = ref<string>("");
@@ -44,8 +44,8 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="page">
-        <div class="header-container">
+    <div class="">
+        <!-- <div class="header-container">
             <div class="header-content">
                 <div class="search-content" v-if="isSearchResults">
                     Search Results for
@@ -66,7 +66,7 @@ onMounted(() => {
                     <button @click="searchPhotos">Search</button>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="img-container">
             <div v-for="item in photos" :key="item.id" class="image-box">
@@ -161,51 +161,51 @@ onMounted(() => {
             }
         }
     }
-    & .img-container {
-        display: grid;
-        grid-template-columns: repeat(3, 300px);
-        padding-inline: 24px;
-        translate: 0 -30px;
-        row-gap: 28px;
-        column-gap: 64px;
-        width: max-content;
-        max-width: 70vw;
-        margin: auto;
+}
+ .img-container {
+    display: grid;
+    grid-template-columns: repeat(3, 300px);
+    padding-inline: 24px;
+    translate: 0 -60px;
+    row-gap: 28px;
+    column-gap: 64px;
+    width: max-content;
+    max-width: 70vw;
+    margin: auto;
 
-        & .image-box {
-            width: 100%;
-            height: max-content;
-            // border: solid;
-            overflow: hidden;
-            border-radius: 10px;
+    & .image-box {
+        width: 100%;
+        height: max-content;
+        // border: solid;
+        overflow: hidden;
+        border-radius: 10px;
+        position: relative;
+
+        & img {
             position: relative;
+            z-index: 10;
+            width: 100%;
+            border-radius: 10px;
 
-            & img {
-                position: relative;
-                z-index: 10;
-                width: 100%;
-                border-radius: 10px;
+            height: 100%;
+            object-fit: cover;
+        }
+        & .img-meta {
+            position: absolute;
+            z-index: 50;
+            color: white;
+            bottom: 10%;
+            padding-inline: 6px;
+            text-shadow: 0.1px 0.1px 2px #1a1a1a;
 
-                height: 100%;
-                object-fit: cover;
+            & h3 {
+                font-size: 1.25rem;
+                font-weight: 600;
+                margin: 0;
             }
-            & .img-meta {
-                position: absolute;
-                z-index: 50;
-                color: white;
-                bottom: 10%;
-                padding-inline: 6px;
-                text-shadow: 0.1px 0.1px 2px #1a1a1a;
-
-                & h3 {
-                    font-size: 1.25rem;
-                    font-weight: 600;
-                    margin: 0;
-                }
-                & p {
-                    margin: 0;
-                    font-size: 0.85rem;
-                }
+            & p {
+                margin: 0;
+                font-size: 0.85rem;
             }
         }
     }
