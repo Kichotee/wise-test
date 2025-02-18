@@ -11,6 +11,8 @@ export interface Photo {
         de: string;
         pt: string;
     };
+    loading?:boolean;
+    loaded?:boolean;
     created_at: string;
     updated_at: string;
     promoted_at: string | null;

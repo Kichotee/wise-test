@@ -2,13 +2,19 @@
 import { computed, onMounted, ref, watchEffect } from "vue";
 import axios from "axios";
 import { type Photo } from "../types/index";
+import { useGalleryStore } from "../store";
+import Gallery from "../components/gallery.vue";
+import { storeToRefs } from "pinia";
 
 // const props = defineProps<{ msg: string }>();
 
 const photos = ref<Photo[]>([]);
-const inputQuery = ref<string>("");
+
 const query = ref<string>("");
 const isSearchResults = ref(false);
+
+
+const {images}= storeToRefs(useGalleryStore())
 const fetchInitialPhotos = async () => {
     const response = await axios.get<Photo[]>(
         `https://api.unsplash.com/photos/?&client_id=${
@@ -28,58 +34,20 @@ const fetchPhotos = async () => {
     photos.value = response.data.results;
 };
 
-function searchPhotos() {
-    console.log(inputQuery.value);
-    query.value = inputQuery.value;
-    fetchPhotos();
-}
+
 
 onMounted(() => {
     fetchInitialPhotos();
 });
 
-// watchEffect(() => {
-//     fetchPhotos();
-// });
+watchEffect(() => {
+  console.log(images)
+});
 </script>
 
 <template>
     <div class="">
-        <!-- <div class="header-container">
-            <div class="header-content">
-                <div class="search-content" v-if="isSearchResults">
-                    Search Results for
-                    <span class="query">"{{ inputQuery }}"</span>
-                </div>
-                <div v-else class="input-container">
-                    <div class="input-box">
-                        <div class="search-icon">
-                            <img src="../assets/search-normal.svg" alt="">
-
-                        </div>
-                        <input
-                            type="text"
-                            placeholder="Search"
-                            v-model="inputQuery"
-                        />
-                    </div>
-                    <button @click="searchPhotos">Search</button>
-                </div>
-            </div>
-        </div> -->
-
-        <div class="img-container">
-            <div v-for="item in photos" :key="item.id" class="image-box">
-                <!-- {{ item }} -->
-                <div class="">
-                    <img :src="item.urls.small_s3" alt="" />
-                </div>
-                <div class="img-meta">
-                    <h3>{{ item.user.name }}</h3>
-                    <p>{{ item.alt_description }}</p>
-                </div>
-            </div>
-        </div>
+        <Gallery :photos="images" />
     </div>
 </template>
 
@@ -88,6 +56,7 @@ onMounted(() => {
     position: relative;
     top: 0;
     width: 100vw;
+    min-height:100vh;
     color: black;
     & .header-container {
         background-color: #eaf0f2;

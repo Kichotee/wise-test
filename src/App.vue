@@ -1,47 +1,60 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 import axios from "axios";
 import type { Photo } from "./types";
-import Home from "./pages/Home.vue";
-const inputQuery = ref<string>("");
+import { useGalleryStore } from "./store";
+import { useRouter } from "vue-router";
+
 const query = ref<string>("");
 const isSearchResults = ref(false);
 
 const photos = ref<Photo[]>([]);
 
-const fetchPhotos = async () => {
-  const response = await axios.get<{ results: Photo[] }>(
-    `https://api.unsplash.com/search/photos/?page=1&query=${
-      query.value
-    }&client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}`
-  );
-  isSearchResults.value = true;
-  photos.value = response.data.results;
-};
 
+
+// const fetchPhotos = async () => {
+//   try {
+//     const response = await axios.get<{ results: Photo[] }>(
+//       `https://api.unsplash.com/search/photos/?page=1&query=${
+//         query.value
+//       }&client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}`
+//     );
+//     photos.value = response.data.results;
+//   } catch (error) {
+//   } finally {
+//     isSearchResults.value = true;
+//   }
+// };
+const { searchImages, getImages, loading, isSearch }= useGalleryStore()
+const router= useRouter()
 function searchPhotos() {
-  console.log(inputQuery.value);
-  query.value = inputQuery.value;
-  fetchPhotos();
+  router.push({ query: { q: query.value } });
+  searchImages(query.value);
 }
+onMounted(() => {
+   getImages()
+});
 </script>
 
 <template>
   <div>
     <div class="page">
       <div class="header-container">
+        
         <div class="header-content">
-          <div class="search-content" v-if="isSearchResults">
+          <div class="search-content" v-if="isSearch">
             Search Results for
-            <span class="query">"{{ inputQuery }}"</span>
+            <span class="query">"{{ query }}"</span>
           </div>
           <div v-else class="input-container">
             <div class="input-box">
               <div class="search-icon">
                 <img src="/search-normal.svg" alt="" />
               </div>
-              <input type="text" placeholder="Search" v-model="inputQuery" />
+              <input @change="()=>{
+                 router.push({ query: { q: query } });
+              }" type="text" placeholder="Search" v-model="query" />
             </div>
             <button @click="searchPhotos">Search</button>
           </div>
@@ -58,6 +71,11 @@ function searchPhotos() {
   top: 0;
   width: 100vw;
   color: black;
+  img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
   & .header-container {
     background-color: #eaf0f2;
     width: 100%;
