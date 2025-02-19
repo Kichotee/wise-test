@@ -1,39 +1,25 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-
-import axios from "axios";
-import type { Photo } from "./types";
 import { useGalleryStore } from "./store";
-import { useRouter } from "vue-router";
-
+import { useRoute, useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
 const query = ref<string>("");
-const isSearchResults = ref(false);
-
-const photos = ref<Photo[]>([]);
-
-
-
-// const fetchPhotos = async () => {
-//   try {
-//     const response = await axios.get<{ results: Photo[] }>(
-//       `https://api.unsplash.com/search/photos/?page=1&query=${
-//         query.value
-//       }&client_id=${import.meta.env.VITE_UNSPLASH_ACCESS_KEY}`
-//     );
-//     photos.value = response.data.results;
-//   } catch (error) {
-//   } finally {
-//     isSearchResults.value = true;
-//   }
-// };
-const { searchImages, getImages, loading, isSearch }= useGalleryStore()
-const router= useRouter()
+const { searchImages, getImages, closeSearch } = useGalleryStore();
+const { loading, isSearch } = storeToRefs(useGalleryStore());
+const router = useRouter();
+function cancelSearch() {
+  closeSearch();
+  getImages();
+  router.push({  });
+}
+const route = useRoute();
 function searchPhotos() {
   router.push({ query: { q: query.value } });
   searchImages(query.value);
+  console.log(loading, isSearch);
 }
 onMounted(() => {
-   getImages()
+  getImages();
 });
 </script>
 
@@ -41,37 +27,60 @@ onMounted(() => {
   <div>
     <div class="page">
       <div class="header-container">
-        
         <div class="header-content">
-          <div class="search-content" v-if="isSearch">
-            Search Results for
-            <span class="query">"{{ query }}"</span>
-          </div>
-          <div v-else class="input-container">
+          <div v-if="!loading && !isSearch" class="input-container">
             <div class="input-box">
               <div class="search-icon">
                 <img src="/search-normal.svg" alt="" />
               </div>
-              <input @change="()=>{
-                 router.push({ query: { q: query } });
-              }" type="text" placeholder="Search" v-model="query" />
+              <input
+                @change="
+                  () => {
+                    router.push({ query: { q: query } });
+                  }
+                "
+                type="text"
+                placeholder="Search"
+                v-model="query"
+              />
             </div>
             <button @click="searchPhotos">Search</button>
           </div>
+          <div class="searching-content" v-if="loading">
+            Searching 
+            <span class="query" v-if="$route.query.q">"for {{ query }}"</span>
+          </div>
+          <div class="search-content" v-if="isSearch && !loading">
+            Search Results for
+            <span class="query">"{{ query }}"</span>
+            <button
+              @click="
+                () => {
+                  cancelSearch();
+                  console.log(isSearch);
+                }
+              "
+            >
+              <span> X </span>
+            </button>
+          </div>
+
+         
         </div>
       </div>
     </div>
   </div>
-  <RouterView />
+  <main>
+    <RouterView/>
+  </main>
 </template>
 
 <style scoped lang="scss">
 .page {
   position: relative;
   top: 0;
-  width: 100vw;
   color: black;
-  img{
+  img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -88,10 +97,30 @@ onMounted(() => {
       & .search-content {
         font-weight: 600;
         color: #455d65;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
         font-size: 48px;
         & .query {
           color: #9ac0cd;
         }
+        & button {
+          background-color: #455d65;
+          padding: 0.5rem 1rem;
+          border-radius: 100%;
+          font-size: 20px;
+          height: max-content;
+        }
+      }
+      & .searching-content {
+        font-weight: 600;
+        color: #455d65;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        font-size: 48px;
       }
     }
     & .input-container {
@@ -159,42 +188,42 @@ onMounted(() => {
     max-width: 70vw;
     margin: auto;
 
-    & .image-box {
-      width: 100%;
-      height: max-content;
-      // border: solid;
-      overflow: hidden;
-      border-radius: 10px;
-      position: relative;
+    // & .image-box {
+    //   width: 100%;
+    //   height: max-content;
+    //   // border: solid;
+    //   overflow: hidden;
+    //   border-radius: 10px;
+    //   position: relative;
 
-      & img {
-        position: relative;
-        z-index: 10;
-        width: 100%;
-        border-radius: 10px;
+    //   & img {
+    //     position: relative;
+    //     z-index: 10;
+    //     width: 100%;
+    //     border-radius: 10px;
 
-        height: 100%;
-        object-fit: cover;
-      }
-      & .img-meta {
-        position: absolute;
-        z-index: 50;
-        color: white;
-        bottom: 10%;
-        padding-inline: 6px;
-        text-shadow: 0.1px 0.1px 2px #1a1a1a;
+    //     height: 100%;
+    //     object-fit: cover;
+    //   }
+    //   & .img-meta {
+    //     position: absolute;
+    //     z-index: 50;
+    //     color: white;
+    //     bottom: 10%;
+    //     padding-inline: 6px;
+    //     text-shadow: 0.1px 0.1px 2px #1a1a1a;
 
-        & h3 {
-          font-size: 1.25rem;
-          font-weight: 600;
-          margin: 0;
-        }
-        & p {
-          margin: 0;
-          font-size: 0.85rem;
-        }
-      }
-    }
+    //     & h3 {
+    //       font-size: 1.25rem;
+    //       font-weight: 600;
+    //       margin: 0;
+    //     }
+    //     & p {
+    //       margin: 0;
+    //       font-size: 0.85rem;
+    //     }
+    //   }
+    // }
   }
 }
 </style>

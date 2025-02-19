@@ -35,18 +35,21 @@ export const useGalleryStore = defineStore("gallery", () => {
           import.meta.env.VITE_UNSPLASH_ACCESS_KEY
         }`
       );
-
       images.value = response.data.results.map((photo) => ({
         ...photo,
         loading: true,
         loaded: false,
       }));
       loading.value = true;
-      isSearch.value = true
+      isSearch.value = true;
+      console.log(loading.value, isSearch.value)
     } catch (error) {
     } finally {
       loading.value = false;
     }
   }
-  return { images, getImages, searchImages, loading, isSearch };
+  function closeSearch() {
+    isSearch.value = false;
+  }
+  return { images, getImages, searchImages, loading, isSearch, closeSearch };
 });
