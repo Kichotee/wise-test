@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useGalleryStore } from "./store";
-import {  useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 const query = ref<string>("");
 const { searchImages, getImages, closeSearch } = useGalleryStore();
@@ -81,6 +81,9 @@ onMounted(() => {
   position: relative;
   top: 0;
   color: black;
+  & input {
+    font-size: clamp(12px, 5vw, 1rem);
+  }
   img {
     width: 100%;
     height: 100%;
@@ -95,6 +98,7 @@ onMounted(() => {
     & .header-content {
       width: 80%;
       margin: 0 auto;
+      font-size: clamp(12px, 5vw, 42px);
       & .search-content {
         font-weight: 600;
         color: variables.$primary-color;
@@ -102,7 +106,6 @@ onMounted(() => {
         align-items: center;
         gap: 10px;
 
-        font-size: 48px;
         & .query {
           color: #9ac0cd;
         }

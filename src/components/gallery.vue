@@ -99,6 +99,18 @@ function openModalId(id: string) {
   width: 70vw;
   margin: auto;
 
+  @media screen and (max-width: 1240px) {
+    grid-template-columns: repeat(2, 300px);
+    & .image-box {
+      & img {
+        height: 40vh;
+      }
+    }
+  }
+  @media screen and (max-width: 768px) {
+    grid-template-columns: repeat(1, 60vw);
+  }
+
   & .image-box {
     width: 100%;
     height: max-content;
@@ -167,8 +179,13 @@ function openModalId(id: string) {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    width: 60vw;
+    @media screen and (max-width:768px) {
+      
+      width:  80vw;
+    }
+    
     & img {
-      width: 50vw;
       height: 60vh;
       object-fit: cover;
     }
@@ -178,8 +195,7 @@ function openModalId(id: string) {
       color: #1a1a1a;
       display: flex;
       flex-direction: column;
-      // gap: 8px;
-
+  
       &::first-letter {
         text-transform: uppercase;
       }
