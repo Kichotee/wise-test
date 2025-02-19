@@ -19,3 +19,7 @@ body:has(.modal){
   max-height: 100vh;
   overflow-y: hidden;
 }
+
+button{
+  cursor: pointer;
+}

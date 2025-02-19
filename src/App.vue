@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useGalleryStore } from "./store";
-import { useRoute, useRouter } from "vue-router";
+import {  useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 const query = ref<string>("");
 const { searchImages, getImages, closeSearch } = useGalleryStore();
@@ -10,9 +10,9 @@ const router = useRouter();
 function cancelSearch() {
   closeSearch();
   getImages();
-  router.push({  });
+  router.push({});
 }
-const route = useRoute();
+// const route = useRoute();
 function searchPhotos() {
   router.push({ query: { q: query.value } });
   searchImages(query.value);
@@ -46,9 +46,10 @@ onMounted(() => {
             </div>
             <button @click="searchPhotos">Search</button>
           </div>
-          <div class="searching-content" v-if="loading">
-            Searching 
-            <span class="query" v-if="$route.query.q">"for {{ query }}"</span>
+
+          <div class="searching-content" v-if="loading && isSearch">
+            Searching
+            <span class="query">for {{ query }}</span>
           </div>
           <div class="search-content" v-if="isSearch && !loading">
             Search Results for
@@ -64,18 +65,18 @@ onMounted(() => {
               <span> X </span>
             </button>
           </div>
-
-         
         </div>
       </div>
     </div>
   </div>
   <main>
-    <RouterView/>
+    <RouterView />
   </main>
 </template>
 
 <style scoped lang="scss">
+@use "./assets/css/variables";
+
 .page {
   position: relative;
   top: 0;
@@ -96,7 +97,7 @@ onMounted(() => {
       margin: 0 auto;
       & .search-content {
         font-weight: 600;
-        color: #455d65;
+        color: variables.$primary-color;
         display: flex;
         align-items: center;
         gap: 10px;
@@ -106,7 +107,7 @@ onMounted(() => {
           color: #9ac0cd;
         }
         & button {
-          background-color: #455d65;
+          background-color: variables.$primary-color;
           padding: 0.5rem 1rem;
           border-radius: 100%;
           font-size: 20px;
@@ -115,7 +116,7 @@ onMounted(() => {
       }
       & .searching-content {
         font-weight: 600;
-        color: #455d65;
+        color: variables.$primary-color;
         display: flex;
         align-items: center;
         gap: 10px;

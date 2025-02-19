@@ -29,7 +29,9 @@ export const useGalleryStore = defineStore("gallery", () => {
     }
   }
   async function searchImages(query: string) {
+    loading.value = true;
     try {
+      isSearch.value = true;
       const response = await axios.get<{ results: Photo[] }>(
         `https://api.unsplash.com/search/photos/?page=1&query=${query}&client_id=${
           import.meta.env.VITE_UNSPLASH_ACCESS_KEY
@@ -40,9 +42,7 @@ export const useGalleryStore = defineStore("gallery", () => {
         loading: true,
         loaded: false,
       }));
-      loading.value = true;
-      isSearch.value = true;
-      console.log(loading.value, isSearch.value)
+      console.log(loading.value, isSearch.value);
     } catch (error) {
     } finally {
       loading.value = false;

@@ -1,14 +1,7 @@
 <script setup lang="ts">
-import {
-  computed,
-  onMounted,
-  ref,
-  Teleport,
-  Transition,
-  watchEffect,
-} from "vue";
+import { computed, ref, watchEffect } from "vue";
 import type { Photo } from "../types";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 
 const { photos, loading } = defineProps<{
   photos: Photo[];
@@ -95,6 +88,7 @@ function openModalId(id: string) {
 </template>
 
 <style scoped lang="scss">
+@use "../assets/css/variables";
 .gallery {
   display: grid;
   grid-template-columns: repeat(3, 300px);
@@ -177,7 +171,6 @@ function openModalId(id: string) {
       width: 50vw;
       height: 60vh;
       object-fit: cover;
-      
     }
     & .meta {
       padding: 16px 24px;
@@ -190,9 +183,14 @@ function openModalId(id: string) {
       &::first-letter {
         text-transform: uppercase;
       }
-
-      p {
-      }
+    }
+    & h3 {
+      color: variables.$primary-color;
+    }
+    & p {
+      font-size: 0.875rem;
+      line-height: 1.125rem;
+      color: variables.$gray;
     }
   }
 }
