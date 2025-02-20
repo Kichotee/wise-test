@@ -11,7 +11,6 @@ const { photos, loading } = defineProps<{
 const imagesWithLoading = ref<Photo[]>([]);
 
 const galleryLoading = computed(() => {
-  console.log(imagesWithLoading.value);
   return loading || imagesWithLoading.value.some((img) => img.loading);
 });
 
@@ -21,23 +20,19 @@ watchEffect(() => {
     loading: true,
     loaded: false,
   }));
-  console.log(imagesWithLoading.value);
 });
 
 const allImagesLoaded = ref(false);
 
 const imageLoaded = (image: Photo) => {
-  console.log(image);
   image.loading = false;
   image.loaded = true;
   allImagesLoaded.value = photos.every((img) => img.loaded);
 };
 const router = useRouter();
-// const route = useRoute();
 
 function openModalId(id: string) {
   router.replace({ hash: `#${id}` });
-  console.log(router.currentRoute.value);
 }
 </script>
 
@@ -180,11 +175,10 @@ function openModalId(id: string) {
     display: flex;
     flex-direction: column;
     width: 60vw;
-    @media screen and (max-width:768px) {
-      
-      width:  80vw;
+    @media screen and (max-width: 768px) {
+      width: 80vw;
     }
-    
+
     & img {
       height: 60vh;
       object-fit: cover;
@@ -195,7 +189,7 @@ function openModalId(id: string) {
       color: #1a1a1a;
       display: flex;
       flex-direction: column;
-  
+
       &::first-letter {
         text-transform: uppercase;
       }

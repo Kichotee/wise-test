@@ -23,7 +23,7 @@ export const useGalleryStore = defineStore("gallery", () => {
         loaded: false,
       }));
     } catch (error) {
-      console.error(error);
+     
     } finally {
       loading.value = false;
     }
@@ -42,7 +42,7 @@ export const useGalleryStore = defineStore("gallery", () => {
         loading: true,
         loaded: false,
       }));
-      console.log(loading.value, isSearch.value);
+   
     } catch (error) {
     } finally {
       loading.value = false;

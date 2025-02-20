@@ -16,7 +16,7 @@ function cancelSearch() {
 function searchPhotos() {
   router.push({ query: { q: query.value } });
   searchImages(query.value);
-  console.log(loading, isSearch);
+ 
 }
 onMounted(() => {
   getImages();
@@ -58,7 +58,7 @@ onMounted(() => {
               @click="
                 () => {
                   cancelSearch();
-                  console.log(isSearch);
+              
                 }
               "
             >
