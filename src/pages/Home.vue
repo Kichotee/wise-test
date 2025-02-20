@@ -2,6 +2,7 @@
 import { useGalleryStore } from "../store";
 import Gallery from "../components/gallery.vue";
 import { storeToRefs } from "pinia";
+import Error from "../components/error.vue";
 
 
 
@@ -11,6 +12,11 @@ const { images } = storeToRefs(useGalleryStore());
 <template>
   <div class="">
     <Gallery :photos="images" />
+    <div class="" v-if="images.length == 0">
+      <Error>
+        We can't get images right now
+      </Error>
+    </div>
   </div>
 </template>
 
